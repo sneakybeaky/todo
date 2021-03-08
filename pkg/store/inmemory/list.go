@@ -11,6 +11,14 @@ func NewList() *List {
 }
 
 func (m *List) Add(todo *todo.Todo) {
+
+	// Check to see if we already have the todo
+	for _, t := range m.items {
+		if t == todo {
+			return
+		}
+	}
+
 	m.items = append(m.items, todo)
 }
 

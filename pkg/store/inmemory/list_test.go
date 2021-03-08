@@ -29,3 +29,28 @@ func TestAdd(t *testing.T) {
 	}
 
 }
+
+func TestAddTwice(t *testing.T) {
+
+	// given a todo item
+	want := todo.Todo{Title: "get this test passing"}
+
+	// when I add it to a new list twice
+	l := inmemory.NewList()
+	l.Add(&want)
+	l.Add(&want)
+
+	// then the list should have just that todo once
+	f := l.Items()
+
+	if len(f) != 1 {
+		t.Errorf("The list should have 1 item, not %d", len(f))
+	}
+
+	got := f[0]
+
+	if got != &want {
+		t.Errorf("wanted %+v, got %+v", want, *got)
+	}
+
+}
