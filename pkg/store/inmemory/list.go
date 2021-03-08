@@ -12,14 +12,21 @@ func NewList() *List {
 
 func (m *List) Add(todo *todo.Todo) {
 
-	// Check to see if we already have the todo
-	for _, t := range m.items {
-		if t == todo {
-			return
-		}
+	if m.contains(todo) {
+		return
 	}
 
 	m.items = append(m.items, todo)
+}
+
+//contains checks if a todo is already in the list
+func (m *List) contains(todo *todo.Todo) bool {
+	for _, t := range m.items {
+		if t == todo {
+			return true
+		}
+	}
+	return false
 }
 
 func (m *List) Items() []*todo.Todo {
