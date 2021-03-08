@@ -1,1 +1,1 @@
-module "todo"
+module "github.com/sneakybeaky/todo"
