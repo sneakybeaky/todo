@@ -1,16 +1,14 @@
-package inmemory
-
-import "github.com/sneakybeaky/todo/pkg/todo"
+package todo
 
 type List struct {
-	items []*todo.Todo
+	items []Todo
 }
 
 func NewList() *List {
 	return &List{}
 }
 
-func (m *List) Add(todo *todo.Todo) {
+func (m *List) Add(todo Todo) {
 
 	if m.contains(todo) {
 		return
@@ -20,7 +18,7 @@ func (m *List) Add(todo *todo.Todo) {
 }
 
 //contains checks if a todo is already in the list
-func (m *List) contains(todo *todo.Todo) bool {
+func (m *List) contains(todo Todo) bool {
 	for _, t := range m.items {
 		if t == todo {
 			return true
@@ -29,6 +27,6 @@ func (m *List) contains(todo *todo.Todo) bool {
 	return false
 }
 
-func (m *List) Items() []*todo.Todo {
+func (m *List) Items() []Todo {
 	return m.items
 }
