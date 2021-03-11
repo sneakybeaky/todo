@@ -1,14 +1,14 @@
 package todo
 
-type List struct {
+type MemoryList struct {
 	items []Todo
 }
 
-func NewList() *List {
-	return &List{}
+func NewMemoryList() *MemoryList {
+	return &MemoryList{}
 }
 
-func (m *List) Add(todo Todo) {
+func (m *MemoryList) Add(todo Todo) {
 
 	if m.contains(todo) {
 		return
@@ -18,7 +18,7 @@ func (m *List) Add(todo Todo) {
 }
 
 //contains checks if a todo is already in the list
-func (m *List) contains(todo Todo) bool {
+func (m *MemoryList) contains(todo Todo) bool {
 	for _, t := range m.items {
 		if t == todo {
 			return true
@@ -27,6 +27,6 @@ func (m *List) contains(todo Todo) bool {
 	return false
 }
 
-func (m *List) Items() []Todo {
+func (m *MemoryList) Items() []Todo {
 	return m.items
 }

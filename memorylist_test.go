@@ -9,7 +9,7 @@ import (
 )
 
 func TestAddToEmptyList(t *testing.T) {
-	list := todo.NewList()
+	list := todo.NewMemoryList()
 	todo1 := todo.Todo{ Title: "get this test passing" }
 	want := []todo.Todo{todo1}
 	list.Add(todo1)
@@ -20,7 +20,7 @@ func TestAddToEmptyList(t *testing.T) {
 }
 
 func TestAddDuplicateItemIgnored(t *testing.T) {
-	list := todo.NewList()
+	list := todo.NewMemoryList()
 	todo1 := todo.Todo{ Title: "get this test passing" }
 	list.Add(todo1)
 	list.Add(todo1)
@@ -34,7 +34,7 @@ func TestAddDuplicateItemIgnored(t *testing.T) {
 }
 
 func TestAddDifferentItemIsOkay(t *testing.T) {
-	list := todo.NewList()
+	list := todo.NewMemoryList()
 	todo1 := todo.Todo{ Title: "get this test passing" }
 	list.Add(todo1)
 	todo2 := todo.Todo{ Title: "really get this test passing" }
