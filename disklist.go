@@ -22,9 +22,11 @@ func NewDiskList(dir string) (*DiskList, error) {
 	return dl, nil
 }
 
-func (dl *DiskList) Add(t Todo) {
-	dl.list.Add(t)
-	_ = dl.store()
+func (dl *DiskList) Add(t Todo) error {
+	if err := dl.list.Add(t); err != nil {
+		return err
+	}
+	return dl.store()
 }
 
 func (dl *DiskList) Items() []Todo {
@@ -73,7 +75,10 @@ func (dl *DiskList) read() error {
 	}
 
 	for _, todo := range todos {
-		dl.list.Add(todo)
+		if err = dl.list.Add(todo); err != nil {
+			return err
+		}
+
 	}
 
 	return nil

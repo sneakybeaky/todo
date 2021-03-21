@@ -8,13 +8,15 @@ func NewMemoryList() *MemoryList {
 	return &MemoryList{}
 }
 
-func (m *MemoryList) Add(todo Todo) {
+func (m *MemoryList) Add(todo Todo) error {
 
 	if m.contains(todo) {
-		return
+		return nil
 	}
 
 	m.items = append(m.items, todo)
+
+	return nil
 }
 
 //contains checks if a todo is already in the list

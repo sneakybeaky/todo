@@ -10,9 +10,9 @@ import (
 
 func TestAddToEmptyList(t *testing.T) {
 	list := todo.NewMemoryList()
-	todo1 := todo.Todo{ Title: "get this test passing" }
+	todo1 := todo.Todo{Title: "get this test passing"}
 	want := []todo.Todo{todo1}
-	list.Add(todo1)
+	_ = list.Add(todo1)
 	got := list.Items()
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
@@ -21,9 +21,9 @@ func TestAddToEmptyList(t *testing.T) {
 
 func TestAddDuplicateItemIgnored(t *testing.T) {
 	list := todo.NewMemoryList()
-	todo1 := todo.Todo{ Title: "get this test passing" }
-	list.Add(todo1)
-	list.Add(todo1)
+	todo1 := todo.Todo{Title: "get this test passing"}
+	_ = list.Add(todo1)
+	_ = list.Add(todo1)
 	want := []todo.Todo{
 		todo1,
 	}
@@ -35,10 +35,10 @@ func TestAddDuplicateItemIgnored(t *testing.T) {
 
 func TestAddDifferentItemIsOkay(t *testing.T) {
 	list := todo.NewMemoryList()
-	todo1 := todo.Todo{ Title: "get this test passing" }
-	list.Add(todo1)
-	todo2 := todo.Todo{ Title: "really get this test passing" }
-	list.Add(todo2)
+	todo1 := todo.Todo{Title: "get this test passing"}
+	_ = list.Add(todo1)
+	todo2 := todo.Todo{Title: "really get this test passing"}
+	_ = list.Add(todo2)
 	// should be ignored
 	want := []todo.Todo{
 		todo1,

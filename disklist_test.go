@@ -17,7 +17,7 @@ func TestAddToEmptyDiskList(t *testing.T) {
 
 	todo1 := todo.Todo{Title: "get this test passing"}
 	want := []todo.Todo{todo1}
-	list.Add(todo1)
+	_ = list.Add(todo1)
 	got := list.Items()
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
@@ -31,7 +31,7 @@ func TestCloseAndOpenDiskList(t *testing.T) {
 
 	{
 		list := mustDiskList(t, td)
-		list.Add(todo1)
+		_ = list.Add(todo1)
 	}
 
 	list := mustDiskList(t, td) // should load list from disk

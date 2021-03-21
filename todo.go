@@ -5,6 +5,6 @@ type Todo struct {
 }
 
 type List interface {
-	Add(Todo)
+	Add(Todo) error
 	Items() []Todo
 }
