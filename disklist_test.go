@@ -12,13 +12,8 @@ import (
 )
 
 func TestAddToEmptyDiskList(t *testing.T) {
-	dir := tempDir(t)
 
-	list, err := todo.NewDiskList(dir)
-
-	if err != nil {
-		t.Fatal(err)
-	}
+	list := mustDiskList(t, tempDir(t))
 
 	todo1 := todo.Todo{Title: "get this test passing"}
 	want := []todo.Todo{todo1}
@@ -31,25 +26,18 @@ func TestAddToEmptyDiskList(t *testing.T) {
 
 func TestCloseAndOpenDiskList(t *testing.T) {
 
-	dir := tempDir(t)
-
+	td := tempDir(t)
 	todo1 := todo.Todo{Title: "get this test passing"}
+
 	{
-		list, err := todo.NewDiskList(dir)
-		if err != nil {
-			t.Fatal(err)
-		}
+		list := mustDiskList(t, td)
 		list.Add(todo1)
 	}
 
-	want := []todo.Todo{todo1}
-
-	list, err := todo.NewDiskList(dir) // should load list from disk
-	if err != nil {
-		t.Fatal(err)
-	}
+	list := mustDiskList(t, td) // should load list from disk
 
 	got := list.Items()
+	want := []todo.Todo{todo1}
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
 	}
@@ -69,4 +57,15 @@ func tempDir(t *testing.T) string {
 	})
 
 	return dir
+}
+
+func mustDiskList(t *testing.T, dir string) *todo.DiskList {
+
+	list, err := todo.NewDiskList(dir)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return list
 }
