@@ -1,16 +1,17 @@
 package todo
 
-type DiskList struct{
-
+type DiskList struct {
+	list List
 }
 
 func NewDiskList() List {
-	return &DiskList{}
+	return &DiskList{list: NewMemoryList()}
 }
 
 func (dl *DiskList) Add(t Todo) {
+	dl.list.Add(t)
 }
 
 func (dl *DiskList) Items() []Todo {
-	return []Todo{}
+	return dl.list.Items()
 }
