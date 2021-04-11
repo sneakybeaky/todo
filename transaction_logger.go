@@ -40,11 +40,11 @@ type FileTransactionLogger struct {
 	file         *os.File     // The location of the transaction log
 }
 
-func (l FileTransactionLogger) WriteAdd(todo Todo) {
+func (l *FileTransactionLogger) WriteAdd(todo Todo) {
 	l.events <- Event{EventType: EventAdd, Payload: todo.Title}
 }
 
-func (l FileTransactionLogger) Err() <-chan error {
+func (l *FileTransactionLogger) Err() <-chan error {
 	return l.errors
 }
 
@@ -57,7 +57,7 @@ func NewFileTransactionLogger(filename string) (*FileTransactionLogger, error) {
 	return &FileTransactionLogger{file: file}, nil
 }
 
-func (l FileTransactionLogger) Run() {
+func (l *FileTransactionLogger) Run() {
 	events := make(chan Event, 16) // Make an events channel
 	l.events = events
 
@@ -82,7 +82,7 @@ func (l FileTransactionLogger) Run() {
 	}()
 }
 
-func (l FileTransactionLogger) ReadEvents() (<-chan Event, <-chan error) {
+func (l *FileTransactionLogger) ReadEvents() (<-chan Event, <-chan error) {
 	scanner := bufio.NewScanner(l.file) // Create a Scanner for l.file
 	outEvent := make(chan Event)        // An unbuffered Event channel
 	outError := make(chan error, 1)     // A buffered error channel
