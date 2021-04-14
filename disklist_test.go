@@ -1,9 +1,6 @@
 package todo_test
 
 import (
-	"fmt"
-	"io/ioutil"
-	"os"
 	"testing"
 
 	"todo"
@@ -11,9 +8,9 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestAddToEmptyDiskList(t *testing.T) {
+func TestAppendItemToList(t *testing.T) {
 
-	list := mustDiskList(t, tempDir(t))
+	list := mustDiskList(t, t.TempDir())
 
 	todo1 := todo.Todo{Title: "get this test passing"}
 	want := []todo.Todo{todo1}
@@ -24,9 +21,9 @@ func TestAddToEmptyDiskList(t *testing.T) {
 	}
 }
 
-func TestCloseAndOpenDiskList(t *testing.T) {
+func TestListPersists(t *testing.T) {
 
-	td := tempDir(t)
+	td := t.TempDir()
 	todo1 := todo.Todo{Title: "get this test passing"}
 
 	{
@@ -44,23 +41,9 @@ func TestCloseAndOpenDiskList(t *testing.T) {
 
 }
 
-func tempDir(t *testing.T) string {
-	dir, err := ioutil.TempDir("", "todotest")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	t.Cleanup(func() {
-		if err := os.RemoveAll(dir); err != nil {
-			t.Log(fmt.Errorf("unable to delete temp dir %w", err))
-		}
-	})
-
-	return dir
-}
-
 func mustDiskList(t *testing.T, dir string) *todo.DiskList {
 
+	t.Helper()
 	list, err := todo.NewDiskList(dir)
 
 	if err != nil {
