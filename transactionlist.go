@@ -1,5 +1,10 @@
 package todo
 
+import (
+	"os"
+	"path"
+)
+
 type TransactionList struct {
 	dl *DiskList
 }
@@ -16,6 +21,15 @@ func NewTransactionList(dir string) (*TransactionList, error) {
 }
 
 func (t *TransactionList) Add(todo Todo) error {
+
+	f, err := os.OpenFile(path.Join(t.dl.dir, "todo_wal.txt"), os.O_CREATE|os.O_RDWR|os.O_APPEND, 0600)
+
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+
 	return t.dl.Add(todo)
 }
 
