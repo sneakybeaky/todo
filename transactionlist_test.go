@@ -42,13 +42,25 @@ func TestTListPersists(t *testing.T) {
 
 }
 
+func SequenceFrom(start int) func(*todo.TransactionList) error {
+
+	s := start
+	return func(list *todo.TransactionList) error {
+		list.Sequence = func() int {
+			s++
+			return s
+		}
+		return nil
+	}
+}
+
 func TestAddingToTListCreatesTransactionLog(t *testing.T) {
 
 	td := t.TempDir()
 	todo1 := todo.Todo{Title: "get this test passing"}
 
 	var originalList *todo.TransactionList
-	originalList, err := todo.NewTransactionList(td)
+	originalList, err := todo.NewTransactionList(td, SequenceFrom(0))
 
 	if err != nil {
 		t.Fatal(err)
@@ -60,17 +72,15 @@ func TestAddingToTListCreatesTransactionLog(t *testing.T) {
 	}
 
 	wantLogFile := path.Join(td, "todo_wal.txt")
-	_, err = os.Stat(wantLogFile)
+	gotData, err := os.ReadFile(wantLogFile)
 
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
 
-	t.Cleanup(func() {
-		err := os.Remove(wantLogFile)
-		if err != nil {
-			t.Fatalf("Unable to clean up transaction log file %v", err)
-		}
-	})
+	wantData := []byte("1\t1\tget this test passing\n")
+	if !cmp.Equal(wantData, gotData) {
+		t.Fatalf(cmp.Diff(string(wantData), string(gotData)))
+	}
 
 }
