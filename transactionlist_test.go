@@ -44,11 +44,10 @@ func TestTListPersists(t *testing.T) {
 
 func SequenceFrom(start int) func(*todo.TransactionList) error {
 
-	s := start
 	return func(list *todo.TransactionList) error {
 		list.Sequence = func() int {
-			s++
-			return s
+			start++
+			return start
 		}
 		return nil
 	}
