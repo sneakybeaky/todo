@@ -10,6 +10,8 @@ import (
 // Sequencer is something that generates monotonically increasing values
 type Sequencer func() int
 
+const LogFilename = "todo_wal.txt"
+
 type TransactionList struct {
 	list     List
 	Sequence Sequencer
@@ -22,7 +24,7 @@ func NewTransactionList(dir string, opts ...TransactionListOption) (*Transaction
 
 	list := NewMemoryList()
 
-	tl := &TransactionList{list: list, LogFile: path.Join(dir, "todo_wal.txt")}
+	tl := &TransactionList{list: list, LogFile: path.Join(dir, LogFilename)}
 
 	for _, opt := range opts {
 		if err := opt(tl); err != nil {
@@ -90,4 +92,8 @@ func (t *TransactionList) replay() error {
 	}
 
 	return nil
+}
+
+func (t *TransactionList) Snapshot() error {
+	return os.Truncate(t.LogFile, 0)
 }

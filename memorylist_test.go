@@ -8,6 +8,13 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+func TestNewMemoryList(t *testing.T) {
+	list := todo.NewMemoryList()
+	if list.Items() == nil {
+		t.Fatal("Expecting an empty list")
+	}
+}
+
 func TestAddToEmptyList(t *testing.T) {
 	list := todo.NewMemoryList()
 	todo1 := todo.Todo{Title: "get this test passing"}

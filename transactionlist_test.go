@@ -10,6 +10,53 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+func TestNewTransactionListFromEmptyFolder(t *testing.T) {
+	td := t.TempDir()
+	_, err := todo.NewTransactionList(td)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestSnapshotTruncatesTransactionLogAndCreatesSnapshotFile(t *testing.T) {
+
+	td := t.TempDir()
+	logPath := path.Join(td, todo.LogFilename)
+	if err := os.WriteFile(logPath, []byte("1 1 blahblahblah"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	before, err := todo.NewTransactionList(td)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err = before.Snapshot(); err != nil {
+		t.Fatal(err)
+	}
+
+	info, err := os.Stat(logPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if info.Size() != 0 {
+		t.Fatalf("Expecting 0 size log, but got %d", info.Size())
+	}
+
+	after, err := todo.NewTransactionList(td)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	wanted := []todo.Todo{{"blahblahblah"}}
+	got := after.Items()
+	if !cmp.Equal(wanted, got) {
+		t.Error(cmp.Diff(wanted, got))
+	}
+
+}
+
 func TestAddingToTListCreatesTransactionLog(t *testing.T) {
 
 	td := t.TempDir()
@@ -42,10 +89,8 @@ func TestAddingToTListCreatesTransactionLog(t *testing.T) {
 }
 
 func TestRestoreFromTransactionLog(t *testing.T) {
-	const input = "testdata/singleadd.txt"
 
-	td := t.TempDir()
-	list, err := todo.NewTransactionList(td, TransactionLog(input))
+	list, err := todo.NewTransactionList("testdata/singleadd")
 	if err != nil {
 		t.Fatal(err)
 	}

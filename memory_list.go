@@ -5,7 +5,7 @@ type MemoryList struct {
 }
 
 func NewMemoryList() *MemoryList {
-	return &MemoryList{}
+	return &MemoryList{items: []Todo{}}
 }
 
 func (m *MemoryList) Add(todo Todo) error {
