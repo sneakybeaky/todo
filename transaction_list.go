@@ -20,22 +20,17 @@ type TransactionListOption func(list *TransactionList) error
 
 func NewTransactionList(dir string, opts ...TransactionListOption) (*TransactionList, error) {
 
-	dl, err := NewDiskList(dir)
+	list := NewMemoryList()
 
-	if err != nil {
-		return nil, err
-	}
-
-	tl := &TransactionList{list: dl, LogFile: path.Join(dir, "todo_wal.txt")}
+	tl := &TransactionList{list: list, LogFile: path.Join(dir, "todo_wal.txt")}
 
 	for _, opt := range opts {
-		if err = opt(tl); err != nil {
+		if err := opt(tl); err != nil {
 			return nil, err
 		}
-
 	}
 
-	if err = tl.replay(); err != nil {
+	if err := tl.replay(); err != nil {
 		return nil, err
 	}
 
