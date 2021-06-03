@@ -11,7 +11,7 @@ import (
 type Sequencer func() int
 
 type TransactionList struct {
-	dl       *DiskList
+	list     List
 	Sequence Sequencer
 	LogFile  string
 }
@@ -26,7 +26,7 @@ func NewTransactionList(dir string, opts ...TransactionListOption) (*Transaction
 		return nil, err
 	}
 
-	tl := &TransactionList{dl: dl, LogFile: path.Join(dir, "todo_wal.txt")}
+	tl := &TransactionList{list: dl, LogFile: path.Join(dir, "todo_wal.txt")}
 
 	for _, opt := range opts {
 		if err = opt(tl); err != nil {
@@ -61,11 +61,11 @@ func (t *TransactionList) Add(todo Todo) error {
 		return err
 	}
 
-	return t.dl.Add(todo)
+	return t.list.Add(todo)
 }
 
 func (t *TransactionList) Items() []Todo {
-	return t.dl.Items()
+	return t.list.Items()
 }
 
 // replay restores items from the log file, if it exists
@@ -90,7 +90,7 @@ func (t *TransactionList) replay() error {
 			return fmt.Errorf("input parse error: %w", err)
 		}
 
-		t.dl.Add(todo)
+		t.list.Add(todo)
 
 	}
 
